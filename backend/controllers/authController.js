@@ -77,7 +77,7 @@ exports.logIn = async (req, res) => {
         });
 
         console.log("✅ - Login successful")
-        res.json({ message: '✅ - Login successful' });
+        res.json({ message: '✅ - Log in successful' });
     } catch (error) {
     }
 };
@@ -89,9 +89,10 @@ exports.logOut = (req, res) => {
 
     res.clearCookie('token');
     console.log("✅ - Logout successful")
-    res.json({ message: '✅ - Logout successful' });
+    res.json({ message: '✅ - Log out successful' });
 };
 
 exports.verifyToken = (req, res) => {
+    console.log("✅ - Verify token successful")
     res.json({ userId: req.user.id, role: req.user.role, username: req.user.username, image: req.user.image, password: req.user.password });
 };

@@ -6,11 +6,15 @@ const cookieParser = require('cookie-parser');
 require('./config/passport')(passport);
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 const sequelize = require('./config/db');
+const http = require('http');
+const socketConfig = require('./socket');
 
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -22,6 +26,7 @@ app.use(cors({
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/message', messageRoutes);
 
 sequelize.sync()
     .then(async () => {
