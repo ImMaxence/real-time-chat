@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "Noto Sans", sans-serif;
+    src: url('../assets/fonts/NotoSans-VariableFont_wdth\,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+:root {
+    --blue: #00ADB5;
+    --white: #EEEEEE;
+    --gray: #393E46;
+    --dark: #222831;
+
+    --dark-blue: #091057;
+    --royal-blue: #024CAA;
+    --orange: #EC8305;
+    --sand: #DBD3D3;
+
+    --font-main: "Noto Sans", sans-serif;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: var(--font-main);
+    color: var(--white);
+}
+
+.error {
+    color: var(--orange);
+    font-weight: 900;
+}
