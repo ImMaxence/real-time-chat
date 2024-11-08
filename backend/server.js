@@ -7,9 +7,12 @@ require('./config/passport')(passport);
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const groupRoutes = require('./routes/groupRoutes');
 const sequelize = require('./config/db');
 const http = require('http');
 const socketConfig = require('./socket');
+const { createGeneralGroup } = require('./config/onStart/createGeneralGroup');
+const models = require('./config/modelsConfig');
 
 dotenv.config();
 
@@ -27,9 +30,15 @@ app.use(cors({
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
+app.use('/api/group', groupRoutes);
 
 sequelize.sync()
     .then(async () => {
+
+        await createGeneralGroup();
+
+        socketConfig(server);
+
         app.listen(process.env.PORT_BACKEND, () => {
             console.log(`🚀 - Server running on port ${process.env.PORT_BACKEND}`);
         });

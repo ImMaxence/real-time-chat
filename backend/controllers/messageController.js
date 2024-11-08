@@ -1,4 +1,5 @@
 const Message = require('../models/Message');
+const Group = require('../models/Group');
 
 exports.getAllMessages = async (req, res) => {
     try {
@@ -15,31 +16,35 @@ exports.getAllMessages = async (req, res) => {
 };
 
 exports.createMessage = async (req, res) => {
-    try {
-        const { text, image, file } = req.body;
+    const { groupId, text, imageUrl, fileUrl } = req.body;
 
-        if (!text) {
-            return res.status(400).json({ message: '❌ - Message cannot be empty' });
+    try {
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            console.log("❌ - Group not found")
+            return res.status(404).json({ message: '❌ - Group not found' });
         }
 
         const username = req.user.username;
 
-        const newMessage = await Message.create({
+        await Message.create({
             text,
-            image,
-            file,
-            username,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            imageUrl,
+            fileUrl,
+            userId: req.user.id,
+            groupId: group.id,
+            username: username,
         });
 
-        console.log('✅ - New message created');
-        res.status(201).json({ message: '✅ - Message created', newMessage });
-    } catch (error) {
-        console.error('❌ - Error creating message : ', error);
-        res.status(500).json({ message: '❌ - Error creating message' });
+        console.log("✅ - Message sent successfully !")
+        res.status(201).json({ message: '✅ - Message sent successfully !' });
+    } catch (err) {
+        console.log("❌ - Error sending message")
+        res.status(500).json({ message: '❌ - Error sending message : ', error: err });
     }
 };
+
 
 exports.editMessage = async (req, res) => {
     try {
@@ -47,10 +52,12 @@ exports.editMessage = async (req, res) => {
 
         const message = await Message.findByPk(id);
         if (!message) {
+            console.log("❌ - Message not found")
             return res.status(404).json({ message: '❌ - Message not found' });
         }
 
         if (message.username !== req.user.username) {
+            console.log("❌ - You are not authorized to edit this message")
             return res.status(403).json({ message: '❌ - You are not authorized to edit this message' });
         }
 
@@ -63,7 +70,7 @@ exports.editMessage = async (req, res) => {
         console.log('✅ - Message updated');
         res.status(200).json({ message: '✅ - Message updated' });
     } catch (error) {
-        console.error('❌ - Error editing message : ', error);
+        console.error('❌ - Error editing message');
         res.status(500).json({ message: '❌ - Error editing message' });
     }
 };
@@ -74,10 +81,12 @@ exports.deleteMessage = async (req, res) => {
 
         const message = await Message.findByPk(id);
         if (!message) {
+            console.log("❌ - Message not found")
             return res.status(404).json({ message: '❌ - Message not found' });
         }
 
         if (message.username !== req.user.username) {
+            console.log("❌ - You are not authorized to delete this message")
             return res.status(403).json({ message: '❌ - You are not authorized to delete this message' });
         }
 
@@ -86,7 +95,7 @@ exports.deleteMessage = async (req, res) => {
         console.log('✅ - Message deleted');
         res.status(200).json({ message: '✅ - Message deleted' });
     } catch (error) {
-        console.error('❌ - Error deleting message : ', error);
+        console.error('❌ - Error deleting message');
         res.status(500).json({ message: '❌ - Error deleting message' });
     }
 };

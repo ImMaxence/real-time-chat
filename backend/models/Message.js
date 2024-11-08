@@ -1,4 +1,3 @@
-// models/Message.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
@@ -20,7 +19,12 @@ const Message = sequelize.define('Message', {
         allowNull: false,
     },
 }, {
-    timestamps: true, // update et create date
+    timestamps: true,
 });
+
+Message.associate = (models) => {
+    Message.belongsTo(models.Group, { foreignKey: 'groupId' });
+    Message.belongsTo(models.User, { foreignKey: 'userId' });
+};
 
 module.exports = Message;

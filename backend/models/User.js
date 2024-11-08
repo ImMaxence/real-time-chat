@@ -5,7 +5,6 @@ const User = sequelize.define('User', {
     username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
     },
     password: {
         type: DataTypes.STRING,
@@ -13,12 +12,16 @@ const User = sequelize.define('User', {
     },
     role: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        defaultValue: 1,
     },
     image: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: true,
-    }
+    },
 });
+
+User.associate = (models) => {
+    User.belongsToMany(models.Group, { through: 'UserGroups', foreignKey: 'userId' });
+};
 
 module.exports = User;
