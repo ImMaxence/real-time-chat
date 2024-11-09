@@ -11,12 +11,7 @@ const groupRoutes = require('./routes/groupRoutes');
 const sequelize = require('./config/db');
 const { createGeneralGroup } = require('./config/onStart/createGeneralGroup');
 const models = require('./config/modelsConfig'); // lien entre les models
-const io = require('socket.io')(8080, {
-    cors: {
-        origin: process.env.URL_FRONTEND,
-        credentials: true,
-    }
-});
+const setupSocket = require('./socket');
 
 dotenv.config();
 
@@ -30,15 +25,6 @@ app.use(cors({
     credentials: true,
 }));
 
-// Socket.io
-io.on('connection', socket => {
-    console.log('📱 - User connected', socket.id);
-
-    socket.on('test', () => {
-        io.emit('test', "data");
-    });
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
@@ -49,9 +35,11 @@ sequelize.sync()
 
         await createGeneralGroup();
 
-        app.listen(process.env.PORT_BACKEND, () => {
+        const server = app.listen(process.env.PORT_BACKEND, () => {
             console.log(`🚀 - Server running on port ${process.env.PORT_BACKEND}`);
         });
+
+        setupSocket(server);
     })
     .catch((err) => {
         console.error('❌ - Database connection failed : ', err);

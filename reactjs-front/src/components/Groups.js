@@ -6,17 +6,14 @@ const Groups = ({ userId }) => {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        // Créer une connexion Socket.io une seule fois au montage du composant
         socketRef.current = io(process.env.REACT_APP_URL_SOCKET, {
-            withCredentials: true, // Assurez-vous que les cookies sont envoyés avec la connexion
+            withCredentials: true,
         });
 
-        // Écoute l'événement 'test' du serveur
         socketRef.current.on('test', (data) => {
-            console.log('Données reçues :', data);  // Affiche les données reçues du backend
+            console.log('Données reçues :', data);
         });
 
-        // Cleanup: déconnexion lorsque le composant est démonté
         return () => {
             if (socketRef.current) {
                 socketRef.current.disconnect();
@@ -25,8 +22,6 @@ const Groups = ({ userId }) => {
     }, []);
 
     const handleTest = () => {
-        console.log('Test emit triggered');
-        // Utilisez socketRef pour émettre l'événement 'test'
         socketRef.current.emit('test');
     };
 
