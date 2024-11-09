@@ -1,5 +1,4 @@
 import { React, useState } from 'react';
-import Layout from '../components/Layout'
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from 'antd';
 import { register } from '../services/authService';
@@ -37,20 +36,20 @@ const RegisterPage = () => {
     };
 
     return (
-        <Layout>
+        <>
             <h1>Register Page</h1>
             {error && <p className='error'>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <h4>Name</h4>
                 <Input onChange={(e) => setUsername(e.target.value)} />
 
-                <h4>Mot de passe</h4>
+                <h4>Password</h4>
                 <Input.Password onChange={(e) => setPassword(e.target.value)} />
 
                 <Button type="primary" loading={loading} htmlType="submit">Register</Button>
                 <Button type='primary' onClick={() => navigate('/')}>Sign in</Button>
             </form>
-        </Layout>
+        </>
     );
 };
 

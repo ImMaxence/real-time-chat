@@ -1,4 +1,3 @@
-const sequelize = require('./db');
 const User = require('../models/User');
 const Group = require('../models/Group');
 const Message = require('../models/Message');

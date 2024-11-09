@@ -9,15 +9,12 @@ const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 const sequelize = require('./config/db');
-const http = require('http');
-const socketConfig = require('./socket');
 const { createGeneralGroup } = require('./config/onStart/createGeneralGroup');
-const models = require('./config/modelsConfig');
+const models = require('./config/modelsConfig'); // lien entre les models
 
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -36,8 +33,6 @@ sequelize.sync()
     .then(async () => {
 
         await createGeneralGroup();
-
-        socketConfig(server);
 
         app.listen(process.env.PORT_BACKEND, () => {
             console.log(`🚀 - Server running on port ${process.env.PORT_BACKEND}`);

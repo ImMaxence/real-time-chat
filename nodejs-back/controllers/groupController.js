@@ -198,6 +198,30 @@ exports.getGroupUsers = async (req, res) => {
         res.json({ users });
     } catch (err) {
         console.error("❌ - Error fetching users", err);
-        res.status(500).json({ message: '❌ - Error fetching users:', error: err });
+        res.status(500).json({ message: '❌ - Error fetching users', error: err });
+    }
+};
+
+exports.getUserGroups = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findByPk(userId, {
+            include: {
+                model: Group,
+                through: { attributes: [] },
+            }
+        });
+
+        if (!user) {
+            console.log("❌ - User not found");
+            return res.status(404).json({ message: '❌ - User not found' });
+        }
+
+        console.log("✅ - User's groups retrieved");
+        res.json({ groups: user.Groups });
+    } catch (err) {
+        console.error("❌ - Error fetching user groups", err);
+        res.status(500).json({ message: '❌ - Error fetching user groups', error: err });
     }
 };

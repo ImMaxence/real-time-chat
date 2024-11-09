@@ -31,3 +31,7 @@ export const deleteGroup = async (groupId) => {
 export const getGroupUsers = async (groupId) => {
     return await api.get(`/api/group/${groupId}/users`)
 }
+
+export const getUserGroups = async (userId) => {
+    return await api.get(`/api/group/${userId}/groups`)
+}

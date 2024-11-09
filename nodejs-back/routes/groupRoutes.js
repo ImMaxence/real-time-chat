@@ -1,6 +1,6 @@
 // routes/groupRoutes.js
 const express = require('express');
-const { createGroup, getGroupMessages, addMemberToGroup, removeMemberFromGroup, getAllGroups, updateGroup, deleteGroup, getGroupUsers } = require('../controllers/groupController');
+const { createGroup, getGroupMessages, addMemberToGroup, removeMemberFromGroup, getAllGroups, updateGroup, deleteGroup, getGroupUsers, getUserGroups } = require('../controllers/groupController');
 const checkAuth = require('../middlewares/checkAuth');
 const router = express.Router();
 
@@ -12,5 +12,6 @@ router.get('/get-all', checkAuth(1), getAllGroups);
 router.put('/:groupId/update', checkAuth(1), updateGroup);
 router.delete('/:groupId/delete', checkAuth(1), deleteGroup);
 router.get('/:groupId/users', checkAuth(1), getGroupUsers)
+router.get('/:userId/groups', checkAuth(1), getUserGroups)
 
 module.exports = router;
