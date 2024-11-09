@@ -9,7 +9,7 @@ const ErrorPage = () => {
     return (
         <Layout>
             <h1>Error page</h1>
-            <button type='primary' onClick={(e) => navigate('/')}>Home page</button>
+            <button onClick={() => navigate('/')}>Home page</button>
         </Layout>
     );
 };

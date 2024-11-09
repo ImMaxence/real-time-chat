@@ -7,32 +7,24 @@ const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('')
-        setLoading(true);
-        setTimeout(async () => {
 
-            if (username.length < 1) {
-                setError('Please enter your username')
-                setLoading(false);
-            } else if (password.length < 1) {
-                setError('Please enter your password')
-                setLoading(false);
-            } else {
-                try {
-                    const res = await logIn({ username, password });
-                    console.log(res)
-                    navigate('/home');
-                } catch (error) {
-                    setError(error)
-                    setLoading(false);
-                }
+        if (username.length < 1) {
+            setError('❌ - Please enter your username')
+        } else if (password.length < 1) {
+            setError('❌ - Please enter your password')
+        } else {
+            try {
+                await logIn({ username, password });
+                navigate('/home');
+            } catch (error) {
+                setError(error)
             }
-        }, 2000);
+        }
+
     };
 
     return (
@@ -46,8 +38,8 @@ const LoginPage = () => {
                 <h4>Password</h4>
                 <input type='password' onChange={(e) => setPassword(e.target.value)} />
 
-                <button type="primary" loading={loading} htmlType="submit">Sign in</button>
-                <button type='primary' onClick={() => navigate('/register')}>Register</button>
+                <button type="submit">Sign in</button>
+                <button onClick={() => navigate('/register')}>Register</button>
             </form>
         </>
     );

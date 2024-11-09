@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 exports.register = async (req, res) => {
     try {
-        const { username, password, role, image } = req.body;
+        const { username, password, image } = req.body;
         // role maybe later for admin
 
         if (!username) {
@@ -40,6 +40,10 @@ exports.register = async (req, res) => {
             sameSite: 'Strict',
             maxAge: 3600000,
         });
+
+        req.io.on('connection', (socket) => {
+            console.log(socket.id)
+        })
 
         console.log("✅ - User registered and logged in successfully");
         res.status(201).json({ message: '✅ - User registered and logged in successfully' });
@@ -87,6 +91,8 @@ exports.logIn = async (req, res) => {
         console.log("✅ - Login successful")
         res.json({ message: '✅ - Log in successful' });
     } catch (error) {
+        console.log("❌ - Internal server error");
+        res.status(500).json({ message: '❌ - Internal server error' });
     }
 };
 

@@ -1,7 +1,6 @@
 import { React, useState, useEffect, useContext, createContext } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { verifyToken } from '../services/authService';
-import { Spin } from 'antd';
 
 const AuthContext = createContext();
 
@@ -35,7 +34,7 @@ const ProtectedRoute = () => {
     return (
         <>
             {loading ? (
-                <Spin />
+                <h1>Loading...</h1>
             ) : isAuthenticated ? (
                 <AuthContext.Provider value={{ data }}>
                     <Outlet />

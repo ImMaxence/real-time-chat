@@ -11,6 +11,12 @@ const groupRoutes = require('./routes/groupRoutes');
 const sequelize = require('./config/db');
 const { createGeneralGroup } = require('./config/onStart/createGeneralGroup');
 const models = require('./config/modelsConfig'); // lien entre les models
+const io = require('socket.io')(8080, {
+    cors: {
+        origin: process.env.URL_FRONTEND,
+        credentials: true,
+    }
+});
 
 dotenv.config();
 
@@ -23,6 +29,15 @@ app.use(cors({
     origin: process.env.URL_FRONTEND,
     credentials: true,
 }));
+
+// Socket.io
+io.on('connection', socket => {
+    console.log('📱 - User connected', socket.id);
+
+    socket.on('test', () => {
+        io.emit('test', "data");
+    });
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
