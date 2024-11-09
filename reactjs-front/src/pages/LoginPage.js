@@ -1,5 +1,4 @@
 import { React, useState } from 'react';
-import { Input, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { logIn } from '../services/authService';
 
@@ -42,13 +41,13 @@ const LoginPage = () => {
             {error && <p className='error'>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <h4>Name</h4>
-                <Input onChange={(e) => setUsername(e.target.value)} />
+                <input onChange={(e) => setUsername(e.target.value)} />
 
                 <h4>Password</h4>
-                <Input.Password onChange={(e) => setPassword(e.target.value)} />
+                <input type='password' onChange={(e) => setPassword(e.target.value)} />
 
-                <Button type="primary" loading={loading} htmlType="submit">Sign in</Button>
-                <Button type='primary' onClick={() => navigate('/register')}>Register</Button>
+                <button type="primary" loading={loading} htmlType="submit">Sign in</button>
+                <button type='primary' onClick={() => navigate('/register')}>Register</button>
             </form>
         </>
     );

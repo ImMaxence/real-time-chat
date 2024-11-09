@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom';
 
 const ErrorPage = () => {
@@ -10,7 +9,7 @@ const ErrorPage = () => {
     return (
         <Layout>
             <h1>Error page</h1>
-            <Button type='primary' onClick={(e) => navigate('/')}>Home page</Button>
+            <button type='primary' onClick={(e) => navigate('/')}>Home page</button>
         </Layout>
     );
 };
