@@ -9,7 +9,7 @@ const HomePage = () => {
     return (
         <div>
             <h1>home page</h1>
-            <Groups userId={data.data.userId} />
+            <Groups userId={data.data.userId} username={data.data.username} />
         </div>
     );
 };

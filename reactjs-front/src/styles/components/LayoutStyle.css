@@ -2,7 +2,8 @@
     min-width: 100%;
     min-height: 100vh;
     position: relative;
-    padding: 20px;
+    /* for navbar */
+    padding: 60px 20px;
 }
 
 .fixed_layout {

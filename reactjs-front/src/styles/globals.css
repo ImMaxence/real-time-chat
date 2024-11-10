@@ -41,3 +41,11 @@ h6,
 p {
     color: var(--blue);
 }
+
+strong {
+    color: var(--orange);
+}
+
+span {
+    color: var(--white);
+}

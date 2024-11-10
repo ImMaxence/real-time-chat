@@ -1,6 +1,7 @@
 import { React, useState, useEffect, useContext, createContext } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { verifyToken } from '../services/authService';
+import NavBar from './NavBar';
 
 const AuthContext = createContext();
 
@@ -33,6 +34,7 @@ const ProtectedRoute = () => {
 
     return (
         <>
+            <NavBar />
             {loading ? (
                 <h1>Loading...</h1>
             ) : isAuthenticated ? (
