@@ -4,22 +4,23 @@ const User = require('../models/User');
 
 exports.register = async (req, res) => {
     try {
-        const { username, password, image } = req.body;
-        // role maybe later for admin
+        const { username, password } = req.body;
+
+        const imageBase64 = req.body.image || null;
 
         if (!username) {
-            console.log("❌ - Please enter a username")
+            console.log("❌ - Please enter a username");
             return res.status(401).json({ message: '❌ - Please enter a username' });
         }
 
         if (!password) {
-            console.log("❌ - Please enter a password")
+            console.log("❌ - Please enter a password");
             return res.status(401).json({ message: '❌ - Please enter a password' });
         }
 
         const existingUser = await User.findOne({ where: { username } });
         if (existingUser) {
-            console.log("❌ - Username already taken")
+            console.log("❌ - Username already taken");
             return res.status(400).json({ message: '❌ - Username already taken' });
         }
 
@@ -29,7 +30,7 @@ exports.register = async (req, res) => {
             username,
             password: hashedPassword,
             role: 1,
-            image
+            image: imageBase64
         });
 
         const token = jwt.sign({ id: newUser.id, username: newUser.username, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -41,14 +42,11 @@ exports.register = async (req, res) => {
             maxAge: 3600000,
         });
 
-        req.io.on('connection', (socket) => {
-            console.log(socket.id)
-        })
-
         console.log("✅ - User registered and logged in successfully");
         res.status(201).json({ message: '✅ - User registered and logged in successfully' });
+
     } catch (error) {
-        console.error('❌ - Error during registration : ');
+        console.error('❌ - Error during registration:', error);
         return res.status(500).json({ message: '❌ - Server error during registration' });
     }
 };

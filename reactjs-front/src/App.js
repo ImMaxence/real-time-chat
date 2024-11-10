@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import PublicGroups from './pages/PublicGroups';
-import Profile from './pages/Profile';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   return (
@@ -20,7 +20,7 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path='/home' element={<HomePage />} />
             <Route path='/public-groups' element={<PublicGroups />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/profile' element={<ProfilePage />} />
           </Route>
 
           <Route path="*" element={<ErrorPage />} />

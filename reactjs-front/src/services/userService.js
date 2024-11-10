@@ -1,17 +1,17 @@
 import api from './apiConfig'
 
 export const getAllUsers = async () => {
-    return await api.get('/user/get-all');
+    return await api.get('/api/user/get-all');
 };
 
 export const getUserById = async (userId) => {
-    return await api.get(`/user/${userId}/get-by-id`);
+    return await api.get(`/api/user/${userId}/get-by-id`);
 };
 
 export const updateUser = async (userId, data) => {
-    return await api.put(`/user/${userId}/update`, data);
+    return await api.put(`/api/user/${userId}/update`, data);
 };
 
 export const deleteUser = async (userId) => {
-    return await api.delete(`/user/${userId}/delete`);
+    return await api.delete(`/api/user/${userId}/delete`);
 };
