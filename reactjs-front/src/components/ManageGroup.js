@@ -32,7 +32,7 @@ const ManageGroup = ({ onGroupChange }) => {
     };
 
     return (
-        <div style={{ backgroundColor: 'red' }}>
+        <div style={{ backgroundColor: 'violet' }}>
             <h1>manage groups component</h1>
 
             <div>

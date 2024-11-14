@@ -11,25 +11,24 @@ const setupSocket = (server) => {
     io.on('connection', (socket) => {
         console.log('📱 - User connected', socket.id);
 
-        socket.on('join_group', (groupName) => {
-            socket.join(groupName);
-            console.log(`📱 - User ${socket.id} joined group ${groupName}`);
-        });
+        socket.join('general'); // if user connected join general
 
-        socket.on('leave_group', (groupName) => {
-            socket.leave(groupName);
-            console.log(`📱 - User ${socket.id} left group ${groupName}`);
-        });
+        socket.on('sendMessage', (data) => {
+            const { groupId, message } = data;
 
-        socket.on('send_message', ({ group, message, username }) => {
-            const timestamp = new Date().toISOString();
-            io.to(group).emit('receive_message', { message, group, senderId: socket.id, username, timestamp });
-            console.log(`📱 - Message sent to group ${group}:`, message);
+            io.to(groupId).emit('receiveMessage', {
+                groupId,
+                message,
+                senderId: socket.id,
+                timestamp: new Date(),
+            });
         });
 
         socket.on('disconnect', () => {
-            console.log('📱 - User disconnected', socket.id);
+            console.log(`User disconnected: ${socket.id}`);
+            socket.leave('general');
         });
+
     });
 
     return io;

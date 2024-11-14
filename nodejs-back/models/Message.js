@@ -10,10 +10,6 @@ const Message = sequelize.define('Message', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
-    file: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
     username: {
         type: DataTypes.STRING,
         allowNull: false,

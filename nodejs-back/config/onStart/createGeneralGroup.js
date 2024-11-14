@@ -7,7 +7,7 @@ exports.createGeneralGroup = async () => {
         if (!generalGroup) {
             await Group.create({
                 name: 'general',
-                maxMembers: 5000,
+                maxMembers: 500,
                 isDefault: true,
                 isProtected: true,
             });

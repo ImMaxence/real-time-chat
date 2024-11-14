@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';
 
@@ -8,11 +8,12 @@ const RegisterPage = () => {
     const [profileImage, setProfileImage] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const fileInputRef = useRef();
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
-            setProfileImage(file);  // On garde juste le fichier, pas en base64
+            setProfileImage(file);
         } else {
             setError('❌ - Please upload a valid image file');
         }
@@ -30,10 +31,10 @@ const RegisterPage = () => {
                 formData.append('username', username);
                 formData.append('password', password);
                 if (profileImage) {
-                    formData.append('image', profileImage);  // Envoi de l'image en tant que fichier
+                    formData.append('image', profileImage);
                 }
 
-                await register(formData);  // Envoi via le service
+                await register(formData);
                 navigate('/home');
             } catch (error) {
                 setError(error);
@@ -43,6 +44,7 @@ const RegisterPage = () => {
 
     const handleRemoveImage = () => {
         setProfileImage(null);
+        fileInputRef.current.value = null;
     };
 
     return (
@@ -57,7 +59,12 @@ const RegisterPage = () => {
                 <input type='password' onChange={(e) => setPassword(e.target.value)} />
 
                 <h4>Profile Image</h4>
-                <input type='file' accept='image/*' onChange={handleImageChange} />
+                <input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                />
 
                 {profileImage && (
                     <>

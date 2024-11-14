@@ -3,8 +3,9 @@ const express = require('express');
 const { createGroup, getGroupMessages, addMemberToGroup, removeMemberFromGroup, getAllGroups, updateGroup, deleteGroup, getGroupUsers, getUserGroups } = require('../controllers/groupController');
 const checkAuth = require('../middlewares/checkAuth');
 const router = express.Router();
+const { upload, resizeImage } = require('../middlewares/imageProcess');
 
-router.post('/create', checkAuth(1), createGroup);
+router.post('/create', upload.single('image'), resizeImage, checkAuth(1), createGroup);
 router.get('/:groupId/messages', checkAuth(1), getGroupMessages);
 router.post('/:groupId/add-member', checkAuth(1), addMemberToGroup);
 router.post('/:groupId/remove-member', checkAuth(1), removeMemberFromGroup);

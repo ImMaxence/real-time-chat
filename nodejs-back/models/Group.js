@@ -14,6 +14,10 @@ const Group = sequelize.define('Group', {
         type: DataTypes.INTEGER,
         defaultValue: 10,
     },
+    image: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
 });

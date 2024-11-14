@@ -1,0 +1,10 @@
+.group_card_container {
+    background-color: orange;
+    margin: 10px;
+    padding: 10px;
+}
+
+.group_card_container img {
+    width: 200px;
+    height: 200px;
+}

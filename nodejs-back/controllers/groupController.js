@@ -5,6 +5,8 @@ const Message = require('../models/Message');
 exports.createGroup = async (req, res) => {
     const { name, isPrivate, maxMembers } = req.body;
 
+    const imageBase64 = req.body.image || null;
+
     if (!name) {
         return res.status(400).json({ message: '❌ - Group name is required' });
     }
@@ -14,6 +16,7 @@ exports.createGroup = async (req, res) => {
             name,
             isPrivate: isPrivate || false,
             maxMembers: maxMembers || 10,
+            image: imageBase64
         });
 
         console.log('✅ - Group created in DB');

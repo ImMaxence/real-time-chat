@@ -16,7 +16,9 @@ exports.getAllMessages = async (req, res) => {
 };
 
 exports.createMessage = async (req, res) => {
-    const { groupId, text, imageUrl, fileUrl } = req.body;
+    const { groupId, text } = req.body;
+
+    const imageBase64 = req.body.image || null;
 
     try {
         const group = await Group.findByPk(groupId);
@@ -30,8 +32,7 @@ exports.createMessage = async (req, res) => {
 
         await Message.create({
             text,
-            imageUrl,
-            fileUrl,
+            image: imageBase64,
             userId: req.user.id,
             groupId: group.id,
             username: username,
