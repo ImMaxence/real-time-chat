@@ -118,6 +118,31 @@ exports.removeMemberFromGroup = async (req, res) => {
     }
 };
 
+exports.removeMemberFromGroupSOCKET = async (req, res) => {
+    const { groupId } = req.params;
+    const { userId } = req.body;
+
+    try {
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            console.log("❌ - Group not found")
+        }
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            console.log("❌ - User not found")
+        }
+
+        await group.removeUser(user);
+
+        console.log("✅ - User removed from the group")
+    } catch (err) {
+        console.log("❌ - Error removing member")
+    }
+};
+
 exports.updateGroup = async (req, res) => {
     const { groupId } = req.params;
     const { name, isPrivate, maxMembers } = req.body;

@@ -4,6 +4,7 @@ import { useAuth } from '../components/ProtectedRoute';
 import ContainerChat from '../components/ContainerChat';
 import SendMessage from '../components/SendMessage';
 import { io } from 'socket.io-client';
+import { removeMemberFromGroup } from '../services/groupService';
 
 const HomePage = () => {
     const data = useAuth(); // id, username, image, password, role of current user
@@ -31,6 +32,8 @@ const HomePage = () => {
             setIsSocketConnected(true);
             console.log('📱 - Socket connecté:', socketRef.current.id);
 
+            socketRef.current.emit('authenticateUser', data.data.userId);
+
             if (groupId) {
                 socketRef.current.emit('joinGroup', groupId); // join general on load
             }
@@ -38,6 +41,7 @@ const HomePage = () => {
 
         socketRef.current.on('disconnect', () => {
             setIsSocketConnected(false);
+            removeMemberFromGroup(groupId, { userId: data.data.userId })
             console.log('❌ Déconnecté du serveur Socket.IO');
         });
 
@@ -48,9 +52,10 @@ const HomePage = () => {
         });
 
         return () => {
+            removeMemberFromGroup(groupId, { userId: data.data.userId })
             socketRef.current.disconnect();
         };
-    }, [groupId]);
+    }, []);
 
     return (
         <div>
