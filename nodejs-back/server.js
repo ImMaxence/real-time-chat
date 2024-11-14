@@ -12,6 +12,7 @@ const sequelize = require('./config/db');
 const { createGeneralGroup } = require('./config/onStart/createGeneralGroup');
 const models = require('./config/modelsConfig'); // lien entre les models
 const setupSocket = require('./socket');
+const { createDefaultAdmin } = require('./config/onStart/createAdminUser');
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/group', groupRoutes);
 sequelize.sync()
     .then(async () => {
 
+        await createDefaultAdmin();
         await createGeneralGroup();
 
         const server = app.listen(process.env.PORT_BACKEND, () => {

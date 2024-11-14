@@ -14,9 +14,10 @@ exports.createGroup = async (req, res) => {
     try {
         const newGroup = await Group.create({
             name,
-            isPrivate: isPrivate || false,
+            isPrivate: isPrivate || true,
             maxMembers: maxMembers || 10,
-            image: imageBase64
+            image: imageBase64,
+            createdBy: req.user.id
         });
 
         console.log('✅ - Group created in DB');
@@ -145,7 +146,11 @@ exports.updateGroup = async (req, res) => {
 
 exports.getAllGroups = async (req, res) => {
     try {
-        const groups = await Group.findAll();
+        const groups = await Group.findAll({
+            where: {
+                isPrivate: false,
+            },
+        });
 
         console.log("✅ - Groups fetched successfully");
         res.json({ groups });

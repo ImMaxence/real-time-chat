@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getGroupMessages } from '../services/groupService';
 
-const ContainerChat = ({ currentGroupId, socket }) => {
+const ContainerChat = ({ currentGroupId, socket, typingInfo }) => {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
 
@@ -32,11 +32,18 @@ const ContainerChat = ({ currentGroupId, socket }) => {
                     ]);
                 }
             });
+
+            socket.on('userTyping', (data) => {
+                if (data.groupId === currentGroupId) {
+                    // Pas besoin de setTypingInfo ici, car ça ne fait que lire `typingInfo` passé par HomePage
+                }
+            });
         }
 
         return () => {
             if (socket) {
                 socket.off('receiveMessage');
+                socket.off('userTyping');
             }
         };
 
@@ -45,7 +52,7 @@ const ContainerChat = ({ currentGroupId, socket }) => {
     return (
         <div style={{ background: 'red', padding: '10px' }}>
             <p>Container chat - Groupe {currentGroupId}</p>
-            {error && <p className='error'>{error}</p>}
+            {error && <p className="error">{error}</p>}
             {messages.map((msg) => (
                 <div key={msg.id} style={{ marginBottom: '10px' }}>
                     <strong>{msg.username}</strong> - <span>{new Date(msg.createdAt).toLocaleString()}</span>
@@ -53,6 +60,8 @@ const ContainerChat = ({ currentGroupId, socket }) => {
                     {msg.image && <img src={msg.image} alt="msg" />}
                 </div>
             ))}
+            {typingInfo.isTyping && typingInfo.username && <p><em>{typingInfo.username} est en train d'écrire...</em></p>}
+
         </div>
     );
 };

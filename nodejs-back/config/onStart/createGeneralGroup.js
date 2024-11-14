@@ -10,6 +10,7 @@ exports.createGeneralGroup = async () => {
                 maxMembers: 500,
                 isDefault: true,
                 isProtected: true,
+                createdBy: 1
             });
             console.log('✅ - General group created !');
         } else {

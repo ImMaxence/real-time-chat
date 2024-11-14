@@ -9,6 +9,7 @@ const HomePage = () => {
     const data = useAuth(); // id, username, image, password, role of current user
     const [groupId, setGroupId] = useState(1); // 1 is the general group
     const [isSocketConnected, setIsSocketConnected] = useState(false);
+    const [typingInfo, setTypingInfo] = useState({ isTyping: false, username: null });
 
     const socketRef = useRef(null);
 
@@ -40,11 +41,16 @@ const HomePage = () => {
             console.log('❌ Déconnecté du serveur Socket.IO');
         });
 
+        socketRef.current.on('userTyping', (data) => {
+            if (data.groupId === groupId) {
+                setTypingInfo(data.isTyping ? { isTyping: true, username: data.username } : { isTyping: false, username: null });
+            }
+        });
+
         return () => {
             socketRef.current.disconnect();
         };
-    }, []);
-
+    }, [groupId]);
 
     return (
         <div>
@@ -52,8 +58,8 @@ const HomePage = () => {
             {isSocketConnected ? (
                 <>
                     <Groups currentGroupId={groupId} userId={data.data.userId} socket={socketRef.current} onGroupSelect={handleGroupSelect} />
-                    <ContainerChat currentGroupId={groupId} socket={socketRef.current} />
-                    <SendMessage currentGroupId={groupId} socket={socketRef.current} userId={data.data.userId} username={data.data.username} />
+                    <ContainerChat currentGroupId={groupId} socket={socketRef.current} typingInfo={typingInfo} />
+                    <SendMessage currentGroupId={groupId} socket={socketRef.current} userId={data.data.userId} username={data.data.username} setTypingInfo={setTypingInfo} />
                 </>
             ) : (
                 <p>Connexion au serveur en cours...</p>
@@ -63,3 +69,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

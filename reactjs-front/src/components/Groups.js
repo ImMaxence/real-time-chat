@@ -14,7 +14,6 @@ const Groups = ({ currentGroupId, userId, socket, onGroupSelect }) => {
             try {
                 const res = await getUserGroups(userId);
                 setGroups(res.data.groups);
-                console.log(res.data.groups)
             } catch (error) {
                 setError(error.message);
             }
@@ -65,6 +64,10 @@ const Groups = ({ currentGroupId, userId, socket, onGroupSelect }) => {
         fileInputRef.current.value = null;
     };
 
+    const handleLeaveGroup = (groupId) => {
+        setGroups((prevGroups) => prevGroups.filter((group) => group.id !== groupId));
+    };
+
     return (
         <div style={{ backgroundColor: 'blue', padding: 10 }}>
             <h2>Groups</h2>
@@ -85,7 +88,7 @@ const Groups = ({ currentGroupId, userId, socket, onGroupSelect }) => {
             <ul>
                 {groups.length > 0 ? (
                     groups.map((group) => (
-                        <GroupCard key={group.id} id={group.id} name={group.name} maxMembers={group.maxMembers} isPrivate={group.isPrivate} image={group.image} onGroupSelect={onGroupSelect} />
+                        <GroupCard key={group.id} id={group.id} name={group.name} maxMembers={group.maxMembers} isPrivate={group.isPrivate} image={group.image} onGroupSelect={onGroupSelect} userId={userId} onLeaveGroup={handleLeaveGroup} />
                     ))
                 ) : (
                     <p>No groups available.</p>

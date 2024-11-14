@@ -1,11 +1,10 @@
 # just readme
 
-forgot password  
-email system ?  
-multer & sharp  
+forgot password ? email system ?  
 middleware io  
-notification  
-message non lu  
-change theme partie user profile  
+change theme partie user profile css theme  
 chat est entrain d'ecrire  
-nombre de user connected ac  
+nombre de user connected  
+delete group, si user admin alors designer un autre user admin du groupe ou supprimer groupe  
+chatvideo ?  
+get tous les users et connected ou non ?  

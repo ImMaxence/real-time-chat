@@ -68,6 +68,11 @@ const setupSocket = (server) => {
             });
         });
 
+        socket.on('userTyping', (data) => {
+            const { groupId, isTyping, username } = data;
+            socket.to(groupId).emit('userTyping', { groupId, isTyping, username });
+        });
+
         socket.on('disconnect', () => {
             console.log(`📱SOCKET - User disconnected: ${socket.id}`);
             socket.leave('general');

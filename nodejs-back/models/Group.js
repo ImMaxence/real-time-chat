@@ -18,6 +18,10 @@ const Group = sequelize.define('Group', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
+    createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
 }, {
     timestamps: true,
 });
