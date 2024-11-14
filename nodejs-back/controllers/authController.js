@@ -43,8 +43,10 @@ exports.register = async (req, res) => {
         });
 
         console.log("✅ - User registered and logged in successfully");
-        res.status(201).json({ message: '✅ - User registered and logged in successfully' });
-
+        res.status(201).json({
+            message: '✅ - User registered and logged in successfully',
+            userId: newUser.id
+        });
     } catch (error) {
         console.error('❌ - Error during registration:', error);
         return res.status(500).json({ message: '❌ - Server error during registration' });
@@ -87,7 +89,10 @@ exports.logIn = async (req, res) => {
         });
 
         console.log("✅ - Login successful")
-        res.json({ message: '✅ - Log in successful' });
+        res.status(201).json({
+            message: '✅ - login successful',
+            userId: user.id
+        });
     } catch (error) {
         console.log("❌ - Internal server error");
         res.status(500).json({ message: '❌ - Internal server error' });

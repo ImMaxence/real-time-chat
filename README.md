@@ -7,3 +7,5 @@ middleware io
 notification  
 message non lu  
 change theme partie user profile  
+chat est entrain d'ecrire  
+nombre de user connected ac  

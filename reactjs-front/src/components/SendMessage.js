@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { createMessage } from '../services/messageService'
+import { createMessage } from '../services/messageService';
 
-const SendMessage = ({ currentGroupId, socket }) => {
+const SendMessage = ({ currentGroupId, socket, userId, username }) => {
 
     const [imageInput, setProfileImage] = useState(null);
     const [error, setError] = useState(null);
     const fileInputRef = useRef();
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState('');
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -23,27 +23,37 @@ const SendMessage = ({ currentGroupId, socket }) => {
     };
 
     const handleSendMessage = async () => {
-        if (!message) return;
 
         try {
-            const savedMessage = await createMessage({ text: message, groupId: currentGroupId, image: imageInput });
-            setMessage('');
-            fileInputRef.current.value = null;
-            setError(null);
 
-            if (socket) {
+            const formData = new FormData();
+            formData.append('text', message);
+            formData.append('groupId', currentGroupId);
+            if (imageInput) {
+                formData.append('image', imageInput);
+            }
+
+            await createMessage(formData);
+
+            if (socket && socket.connected) {
                 socket.emit('sendMessage', {
                     groupId: currentGroupId,
-                    message: savedMessage.data,
+                    message: message,
+                    username: username,
+                    userId: userId,
+                    image: imageInput,
                 });
             } else {
                 console.error("Socket is not connected");
             }
+
+            setMessage('');
+            fileInputRef.current.value = null;
+            setError(null);
         } catch (error) {
-            setError(error.message || 'Erreur lors de l\'envoi du message');
+            setError(error);
         }
     };
-
 
     return (
         <div style={{ backgroundColor: 'green', padding: 10 }}>

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';
+import { addMemberToGroup } from '../services/groupService';
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('');
@@ -34,7 +35,8 @@ const RegisterPage = () => {
                     formData.append('image', profileImage);
                 }
 
-                await register(formData);
+                const res = await register(formData);
+                await addMemberToGroup(1, { userId: res.data.userId })
                 navigate('/home');
             } catch (error) {
                 setError(error);

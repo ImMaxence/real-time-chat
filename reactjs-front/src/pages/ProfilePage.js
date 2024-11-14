@@ -3,6 +3,7 @@ import { logOut } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../services/userService';
 import { useAuth } from '../components/ProtectedRoute';
+import { removeMemberFromGroup } from '../services/groupService';
 
 const Profile = () => {
     const data = useAuth();
@@ -27,6 +28,7 @@ const Profile = () => {
     const handleLogOut = async () => {
         setError(null);
         try {
+            await removeMemberFromGroup(1, { userId: data.data.userId })
             await logOut();
             navigate('/');
         } catch (error) {

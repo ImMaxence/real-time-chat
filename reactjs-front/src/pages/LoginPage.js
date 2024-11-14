@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logIn } from '../services/authService';
+import { addMemberToGroup } from '../services/groupService'
 
 const LoginPage = () => {
 
@@ -18,7 +19,8 @@ const LoginPage = () => {
             setError('❌ - Please enter your password')
         } else {
             try {
-                await logIn({ username, password });
+                const res = await logIn({ username, password });
+                await addMemberToGroup(1, { userId: res.data.userId })
                 navigate('/home');
             } catch (error) {
                 setError(error)

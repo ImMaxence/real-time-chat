@@ -12,6 +12,11 @@ const HomePage = () => {
 
     const socketRef = useRef(null);
 
+    const handleGroupSelect = (selectedGroupId) => {
+        setGroupId(selectedGroupId); // props
+        socketRef.current.emit('joinGroup', selectedGroupId);
+    };
+
     useEffect(() => {
         socketRef.current = io(process.env.REACT_APP_URL_SOCKET, {
             withCredentials: true,
@@ -24,6 +29,10 @@ const HomePage = () => {
         socketRef.current.on('connect', () => {
             setIsSocketConnected(true);
             console.log('📱 - Socket connecté:', socketRef.current.id);
+
+            if (groupId) {
+                socketRef.current.emit('joinGroup', groupId); // join general on load
+            }
         });
 
         socketRef.current.on('disconnect', () => {
@@ -31,23 +40,20 @@ const HomePage = () => {
             console.log('❌ Déconnecté du serveur Socket.IO');
         });
 
-        socketRef.current.on('receiveMessage', (message) => {
-            console.log('📩 Message reçu dans HomePage:', message);
-        });
-
         return () => {
             socketRef.current.disconnect();
         };
     }, []);
 
+
     return (
         <div>
             <h1>Home Page</h1>
-            <Groups userId={data.data.userId} />
             {isSocketConnected ? (
                 <>
+                    <Groups currentGroupId={groupId} userId={data.data.userId} socket={socketRef.current} onGroupSelect={handleGroupSelect} />
                     <ContainerChat currentGroupId={groupId} socket={socketRef.current} />
-                    <SendMessage currentGroupId={groupId} socket={socketRef.current} />
+                    <SendMessage currentGroupId={groupId} socket={socketRef.current} userId={data.data.userId} username={data.data.username} />
                 </>
             ) : (
                 <p>Connexion au serveur en cours...</p>

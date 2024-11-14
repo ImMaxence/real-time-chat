@@ -24,7 +24,10 @@ exports.createGroup = async (req, res) => {
         if (req.user && req.user.id) {
             await newGroup.addUser(req.user.id);
             console.log('✅ - User added to group successfully !');
-            return res.status(201).json({ message: '✅ - Group created and user added successfully !' });
+            return res.status(201).json({
+                message: '✅ - Group created and user added successfully !',
+                groupId: newGroup.id
+            });
         } else {
             return res.status(400).json({ message: '❌ - User is not authenticated' });
         }
@@ -33,7 +36,6 @@ exports.createGroup = async (req, res) => {
         res.status(500).json({ message: '❌ - Error creating group:', error: err });
     }
 };
-
 
 exports.getGroupMessages = async (req, res) => {
     const { groupId } = req.params;

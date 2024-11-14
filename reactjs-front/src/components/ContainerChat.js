@@ -1,34 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { getGroupMessages } from '../services/groupService'
+import { getGroupMessages } from '../services/groupService';
 
 const ContainerChat = ({ currentGroupId, socket }) => {
-
     const [messages, setMessages] = useState([]);
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const res = await getGroupMessages(currentGroupId)
+                const res = await getGroupMessages(currentGroupId);
                 setMessages(res.data.messages);
             } catch (error) {
-                setError(error)
+                setError(error);
             }
-        }
+        };
 
-        fetchMessages()
+        fetchMessages();
 
-        // Vérifie que le socket est défini avant d'ajouter l'écouteur
         if (socket) {
             socket.on('receiveMessage', (newMessage) => {
-                console.log("📩 Nouveau message reçu dans ContainerChat:", newMessage);
                 if (newMessage.groupId === currentGroupId) {
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                    setMessages((prevMessages) => [
+                        ...prevMessages,
+                        {
+                            id: newMessage.id || new Date().getTime(),
+                            text: newMessage.message,
+                            username: newMessage.username,
+                            createdAt: newMessage.timestamp,
+                            image: newMessage.image
+                        }
+                    ]);
                 }
             });
         }
 
-        // Supprime l'écouteur pour éviter des conflits
         return () => {
             if (socket) {
                 socket.off('receiveMessage');
@@ -42,7 +47,11 @@ const ContainerChat = ({ currentGroupId, socket }) => {
             <p>Container chat - Groupe {currentGroupId}</p>
             {error && <p className='error'>{error}</p>}
             {messages.map((msg) => (
-                <p key={msg.id}>Message : {msg.text}</p>
+                <div key={msg.id} style={{ marginBottom: '10px' }}>
+                    <strong>{msg.username}</strong> - <span>{new Date(msg.createdAt).toLocaleString()}</span>
+                    <p>{msg.text}</p>
+                    {msg.image && <img src={msg.image} alt="msg" />}
+                </div>
             ))}
         </div>
     );

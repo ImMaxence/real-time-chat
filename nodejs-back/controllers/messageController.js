@@ -40,9 +40,9 @@ exports.createMessage = async (req, res) => {
 
         console.log("✅ - Message sent successfully !")
         res.status(201).json({ message: '✅ - Message sent successfully !' });
-    } catch (err) {
-        console.log("❌ - Error sending message")
-        res.status(500).json({ message: '❌ - Error sending message : ', error: err });
+    } catch (error) {
+        console.log("❌ - Error sending message : ", error)
+        res.status(500).json({ message: '❌ - Error sending message' });
     }
 };
 
