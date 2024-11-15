@@ -13,11 +13,20 @@ const setupSocket = (server) => {
     io.on('connection', (socket) => {
         console.log('📱SOCKET - User connected', socket.id);
 
-        // Étape 2 : Authentification de l'utilisateur
-        socket.on('authenticateUser', (userId) => {
-            // Assigner l'userId au socket pour référence future
+        socket.on('authenticateUser', async (userId) => {
             socket.userId = userId;
             console.log(`📱SOCKET - User authenticated: ${userId}`);
+
+            // const groupId = 1;
+
+            // if (userId) {
+            //     try {
+            //         await addMemberToGroupSOCKET({ params: { groupId }, body: { userId } });
+            //         console.log(`✅ - User ${userId} add from group ${groupId}`);
+            //     } catch (error) {
+            //         console.error("❌ - Error adding user from group on connect : ", error);
+            //     }
+            // }
         });
 
         socket.on('createGroup', async (groupData) => {

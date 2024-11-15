@@ -4,7 +4,7 @@ import { useAuth } from '../components/ProtectedRoute';
 import ContainerChat from '../components/ContainerChat';
 import SendMessage from '../components/SendMessage';
 import { io } from 'socket.io-client';
-import { removeMemberFromGroup } from '../services/groupService';
+import { addMemberToGroup, removeMemberFromGroup } from '../services/groupService';
 
 const HomePage = () => {
     const data = useAuth(); // id, username, image, password, role of current user
@@ -28,15 +28,18 @@ const HomePage = () => {
             timeout: 5000,
         });
 
-        socketRef.current.on('connect', () => {
-            setIsSocketConnected(true);
+        socketRef.current.on('connect', async () => {
             console.log('📱 - Socket connecté:', socketRef.current.id);
 
             socketRef.current.emit('authenticateUser', data.data.userId);
 
             if (groupId) {
                 socketRef.current.emit('joinGroup', groupId); // join general on load
+
+                await addMemberToGroup(groupId, { userId: data.data.userId })
             }
+
+            setIsSocketConnected(true);
         });
 
         socketRef.current.on('disconnect', () => {
