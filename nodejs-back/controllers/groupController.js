@@ -17,7 +17,8 @@ exports.createGroup = async (req, res) => {
             isPrivate: isPrivate || true,
             maxMembers: maxMembers || 10,
             image: imageBase64,
-            createdBy: req.user.id
+            createdBy: req.user.id,
+            memberCount: 1 // add creator
         });
 
         console.log('✅ - Group created in DB');
@@ -34,7 +35,7 @@ exports.createGroup = async (req, res) => {
         }
     } catch (err) {
         console.error("❌ - Error creating group", err);
-        res.status(500).json({ message: '❌ - Error creating group:', error: err });
+        res.status(500).json({ message: '❌ - Error creating group:', err });
     }
 };
 
@@ -56,7 +57,7 @@ exports.getGroupMessages = async (req, res) => {
         res.json({ messages: group.Messages, });
     } catch (err) {
         console.log("❌ - Error fetching messages")
-        res.status(500).json({ message: '❌ - Error fetching messages : ', error: err });
+        res.status(500).json({ message: '❌ - Error fetching messages : ', err });
     }
 };
 
@@ -81,11 +82,42 @@ exports.addMemberToGroup = async (req, res) => {
 
         await group.addUser(user);
 
+        group.memberCount += 1;
+        await group.save();
+
         console.log("✅ - User added to the group")
         res.json({ message: '✅ - User added to the group' });
     } catch (err) {
         console.log("❌ - Error adding member")
-        res.status(500).json({ message: '❌ - Error adding member', error: err });
+        res.status(500).json({ message: '❌ - Error adding member', err });
+    }
+};
+
+exports.addMemberToGroupSOCKET = async (req, res) => {
+    const { groupId } = req.params;
+    const { userId } = req.body;
+
+    try {
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            console.log("❌ -  Group not found")
+        }
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            console.log("❌ -  User not found")
+        }
+
+        await group.addUser(user);
+
+        group.memberCount += 1;
+        await group.save();
+
+        console.log("✅ - User added to the group")
+    } catch (err) {
+        console.log("❌ - Error adding member")
     }
 };
 
@@ -110,38 +142,44 @@ exports.removeMemberFromGroup = async (req, res) => {
 
         await group.removeUser(user);
 
+        group.memberCount = Math.max(0, group.memberCount - 1);
+        await group.save();
+
         console.log("✅ - User removed from the group")
         res.json({ message: '✅ - User removed from the group' });
     } catch (err) {
         console.log("❌ - Error removing member")
-        res.status(500).json({ message: '❌ - Error removing member : ', error: err });
+        res.status(500).json({ message: '❌ - Error removing member : ', err });
     }
 };
 
-exports.removeMemberFromGroupSOCKET = async (req, res) => {
-    const { groupId } = req.params;
-    const { userId } = req.body;
+// exports.removeMemberFromGroupSOCKET = async (req, res) => {
+//     const { groupId } = req.params;
+//     const { userId } = req.body;
 
-    try {
-        const group = await Group.findByPk(groupId);
+//     try {
+//         const group = await Group.findByPk(groupId);
 
-        if (!group) {
-            console.log("❌ - Group not found")
-        }
+//         if (!group) {
+//             console.log("❌ - Group not found")
+//         }
 
-        const user = await User.findByPk(userId);
+//         const user = await User.findByPk(userId);
 
-        if (!user) {
-            console.log("❌ - User not found")
-        }
+//         if (!user) {
+//             console.log("❌ - User not found")
+//         }
 
-        await group.removeUser(user);
+//         await group.removeUser(user);
 
-        console.log("✅ - User removed from the group")
-    } catch (err) {
-        console.log("❌ - Error removing member")
-    }
-};
+//         group.memberCount = Math.max(0, group.memberCount - 1);
+//         await group.save();
+
+//         console.log("✅ - User removed from the group")
+//     } catch (err) {
+//         console.log("❌ - Error removing member")
+//     }
+// };
 
 exports.updateGroup = async (req, res) => {
     const { groupId } = req.params;
@@ -165,7 +203,7 @@ exports.updateGroup = async (req, res) => {
         res.json({ message: '✅ - Group updated successfully', group });
     } catch (err) {
         console.error("❌ - Error updating group", err);
-        res.status(500).json({ message: '❌ - Error updating group', error: err });
+        res.status(500).json({ message: '❌ - Error updating group : ', err });
     }
 };
 
@@ -181,7 +219,7 @@ exports.getAllGroups = async (req, res) => {
         res.json({ groups });
     } catch (err) {
         console.error("❌ - Error fetching groups", err);
-        res.status(500).json({ message: '❌ - Error fetching groups', error: err });
+        res.status(500).json({ message: '❌ - Error fetching groups : ', err });
     }
 };
 
@@ -207,7 +245,7 @@ exports.deleteGroup = async (req, res) => {
         res.json({ message: '✅ - Group deleted successfully' });
     } catch (err) {
         console.error("❌ - Error deleting group", err);
-        res.status(500).json({ message: '❌ - Error deleting group', error: err });
+        res.status(500).json({ message: '❌ - Error deleting group : ', err });
     }
 };
 
@@ -233,7 +271,7 @@ exports.getGroupUsers = async (req, res) => {
         res.json({ users });
     } catch (err) {
         console.error("❌ - Error fetching users", err);
-        res.status(500).json({ message: '❌ - Error fetching users', error: err });
+        res.status(500).json({ message: '❌ - Error fetching users : ', err });
     }
 };
 
@@ -257,6 +295,6 @@ exports.getUserGroups = async (req, res) => {
         res.json({ groups: user.Groups });
     } catch (err) {
         console.error("❌ - Error fetching user groups", err);
-        res.status(500).json({ message: '❌ - Error fetching user groups', error: err });
+        res.status(500).json({ message: '❌ - Error fetching user groups : ', err });
     }
 };

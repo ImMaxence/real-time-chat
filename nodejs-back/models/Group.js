@@ -21,6 +21,10 @@ const Group = sequelize.define('Group', {
     createdBy: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    memberCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
     }
 }, {
     timestamps: true,
